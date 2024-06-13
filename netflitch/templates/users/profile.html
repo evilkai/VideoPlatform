@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Profile</h2>
+{% if user.channel.avatar %}
+    <img src="{{ user.channel.avatar.url }}" alt="Avatar" width="150">
+{% else %}
+    <p>No avatar available</p>
+{% endif %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'channel_view' request.user.channel.id %}">
+    <button type="button">View Channel</button>
+</a>
+{% endblock %}

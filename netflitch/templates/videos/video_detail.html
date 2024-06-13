@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ video.title }}</h2>
+<video controls>
+    <source src="{{ video.file.url }}" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+<p>{{ video.description }}</p>
+<h3>Live Chat</h3>
+<div id="chat">
+    <!-- WebSocket -->
+</div>
+<form id="chat-form">
+    <textarea id="message" name="message"></textarea>
+    <button type="submit">Send</button>
+</form>
+<script>
+    const videoId = "{{ video.id }}";
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/video/' + videoId + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        document.querySelector('#chat').innerHTML += '<p><strong>' + data.username + ':</strong> ' + data.message + ' <em>(' + data.timestamp + ')</em></p>';
+    };
+
+    document.querySelector('#chat-form').onsubmit = function(e) {
+        e.preventDefault();
+        const messageInput = document.querySelector('#message');
+        chatSocket.send(JSON.stringify({
+            'message': messageInput.value
+        }));
+        messageInput.value = '';
+    };
+</script>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Welcome to Netflitch</h2>
+{% if user.is_authenticated %}
+    <p>Hello, {{ user.username }}!</p>
+{% else %}
+    <p>Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a>.</p>
+{% endif %}
+{% endblock %}
